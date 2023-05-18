@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initViews()
 
-        supportActionBar?.title = "Your Student ID"
+        supportActionBar?.title = "180101030"
 
         buttonLogin.setOnClickListener{
             val intent = Intent(this,SearchScreenActivity::class.java)
