@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.berkayesen.afinal.retrofit2.data.api.ApiService
+import com.berkayesen.afinal.retrofit2.data.utils.Constants.BASE_URL
 import com.berkayesen.afinal.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.Dispatchers
 
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getCurrentData(){
         val retrofitInstance = Retrofit.Builder()
-            .baseUrl("https://api.openchargemap.io")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofitInstance.create(ApiService::class.java)
