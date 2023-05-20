@@ -4,7 +4,7 @@ data class AddressInfo(
     val AccessComments: String,
     val AddressLine1: String,
     val AddressLine2: String,
-    val ContactEmail: String,
+    val ContactEmail: Any,
     val ContactTelephone1: String,
     val ContactTelephone2: Any,
     val Country: Country,

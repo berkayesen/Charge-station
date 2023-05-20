@@ -12,6 +12,6 @@ data class UserComment(
     val IsActionedByEditor: Boolean,
     val Rating: Any,
     val RelatedURL: String,
-    val User: UserX,
+    //val User: String,
     val UserName: String
 )
