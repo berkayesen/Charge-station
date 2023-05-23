@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.berkayesen.afinal.retrofit2.data.api.ApiService
 import com.berkayesen.afinal.retrofit2.data.utils.Constants.BASE_URL
 import com.berkayesen.afinal.viewmodel.MainActivityViewModel
+import com.huawei.hms.maps.MapsInitializer
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.awaitResponse
@@ -27,9 +28,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         getCurrentData()
         supportActionBar?.title = "180101030"
+        MapsInitializer.setApiKey("DAEDAGAYHMojfxUfAXdc0HeLrxnYzrjhsUpm6zjonvRMJy2kbH76UPkMfK77nInn41Ybcya6NJ/USIiTiqVdzsK4j8tFNsBQQORpPw==")
 
 
     }
