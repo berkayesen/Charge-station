@@ -24,7 +24,7 @@ android {
         }
     }
     buildFeatures{
-        dataBinding true
+        viewBinding = true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -50,10 +50,19 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.7.1")
     //Coroutine
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
     //Lifecycle
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
+
+    //navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+
+    
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'com.hbb20:ccp:2.5.1'
+
+
 }
