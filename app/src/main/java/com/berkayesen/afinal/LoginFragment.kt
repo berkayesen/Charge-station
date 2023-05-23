@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.berkayesen.afinal.databinding.FragmentLoginBinding
 import com.huawei.hms.common.ApiException
 import com.huawei.hms.support.account.AccountAuthManager
@@ -50,6 +52,8 @@ class LoginFragment : Fragment() {
             val authAccountTask = AccountAuthManager.parseAuthResultFromIntent(data)
             if (authAccountTask.isSuccessful) {
                 // The sign-in is successful, and the user's ID information and authorization code are obtained.
+                Toast.makeText(requireContext(),"Signed In Successfully",Toast.LENGTH_LONG).show()
+                navigateMapPage()
                 val authAccount = authAccountTask.result
                 Log.i(TAG, "serverAuthCode:" + authAccount.authorizationCode)
             } else {
@@ -70,5 +74,7 @@ class LoginFragment : Fragment() {
         }
     }*/
 
-
+    private fun navigateMapPage(){
+        findNavController().navigate(R.id.action_loginFragment_to_mapFragment)
+    }
 }
