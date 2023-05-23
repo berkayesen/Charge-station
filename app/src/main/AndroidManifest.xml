@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!--check network permissions-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--check wifi state-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -23,9 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".SearchScreenActivity"
-            android:exported="false" />
+        <meta-data android:name="com.huawei.hms.appid" android:value="108337805"/>
     </application>
 
 </manifest>
