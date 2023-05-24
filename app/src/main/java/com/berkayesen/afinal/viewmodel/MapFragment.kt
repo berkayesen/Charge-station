@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import com.berkayesen.afinal.databinding.FragmentMapBinding
@@ -17,6 +18,7 @@ import com.huawei.hms.maps.MapsInitializer
 import com.huawei.hms.maps.OnMapReadyCallback
 import com.huawei.hms.maps.model.LatLng
 import com.huawei.hms.maps.model.MarkerOptions
+import kotlin.math.log
 
 
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -83,7 +85,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             .snippet("This is a snippet!")
         hMap?.addMarker(options)
 
-
+        hMap?.setOnMarkerClickListener { marker ->
+            val position = marker.position.toString()
+            Log.i(TAG,"onMarkerClick:${marker.position}")
+            false
+        }
     }
 
     /*private fun addMarker(chargerList :List<LatLng>){
