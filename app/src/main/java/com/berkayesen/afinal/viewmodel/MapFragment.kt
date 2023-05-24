@@ -15,6 +15,8 @@ import com.huawei.hms.maps.HuaweiMap
 import com.huawei.hms.maps.MapView
 import com.huawei.hms.maps.MapsInitializer
 import com.huawei.hms.maps.OnMapReadyCallback
+import com.huawei.hms.maps.model.LatLng
+import com.huawei.hms.maps.model.MarkerOptions
 
 
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -75,8 +77,25 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         if(hasLocationPermission()){
             hMap?.isMyLocationEnabled = true
         }
+        val options = MarkerOptions()
+            .position(LatLng(38.630554, 27.422222))
+            .title("Hello Huawei Map")
+            .snippet("This is a snippet!")
+        hMap?.addMarker(options)
+
 
     }
+
+    /*private fun addMarker(chargerList :List<LatLng>){
+        chargerList.forEach{
+            val options = MarkerOptions()
+                .position(it)
+            //.title("Hello Huawei Map")
+            //.snippet("This is a snippet!")
+            hMap?.addMarker(options)
+        }
+
+    }*/
     override fun onStart() {
         super.onStart()
         mMapView?.onStart()
