@@ -29,6 +29,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     ){
         permissions ->
         permissions.entries.forEach{
+            if(it.value){
+                hMap?.isMyLocationEnabled = true
+            }
             Log.d(TAG,"${it.key} = ${it.value}")
         }
     }
@@ -68,6 +71,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
     override fun onMapReady(p0: HuaweiMap?) {
         hMap = p0
+        hMap?.mapType = HuaweiMap.MAP_TYPE_TERRAIN
+        if(hasLocationPermission()){
+            hMap?.isMyLocationEnabled = true
+        }
+
     }
     override fun onStart() {
         super.onStart()
