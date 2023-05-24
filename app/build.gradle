@@ -78,7 +78,8 @@ dependencies {
 
     //MapKit
     implementation 'com.huawei.hms:maps:6.10.1.300'
-
+    //Location Kit
+    implementation 'com.huawei.hms:location:6.9.0.300'
     
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

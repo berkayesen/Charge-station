@@ -12,10 +12,10 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import com.berkayesen.afinal.databinding.FragmentMapBinding
-import com.huawei.hms.maps.HuaweiMap
-import com.huawei.hms.maps.MapView
-import com.huawei.hms.maps.MapsInitializer
-import com.huawei.hms.maps.OnMapReadyCallback
+import com.huawei.hmf.tasks.OnFailureListener
+import com.huawei.hmf.tasks.OnSuccessListener
+import com.huawei.hms.location.*
+import com.huawei.hms.maps.*
 import com.huawei.hms.maps.model.LatLng
 import com.huawei.hms.maps.model.MarkerOptions
 import kotlin.math.log
@@ -25,6 +25,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentMapBinding
     private var mMapView: MapView? = null
     private var hMap: HuaweiMap? = null
+    private lateinit var settingsClient:SettingsClient
+    private lateinit var mLocationRequest: LocationRequest
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     companion object{
         private const val TAG ="MapFragment"
     }
@@ -58,6 +61,63 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestLocationPermission()
+        settingsClient = LocationServices.getSettingsClient(requireActivity())
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+    }
+    fun getFusedLocation(){
+        val mLocationRequest = LocationRequest()
+        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mLocationRequest.numUpdates = 1
+        val mLocationCallback: LocationCallback
+        mLocationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                if (locationResult != null) {
+                    // TODO: Process the location callback result.
+                }
+            }
+        }
+        val lastLocation =
+            fusedLocationProviderClient.lastLocation
+        lastLocation.addOnSuccessListener(OnSuccessListener { location ->
+            if (location == null) {
+                //TODO:request update
+                return@OnSuccessListener
+            }
+            val lat = location.latitude
+            val long = location.longitude
+            hMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat,long),16f))
+            // TODO: Define logic for processing the Location object upon success.
+            return@OnSuccessListener
+        })
+            // Define callback for failure in obtaining the last known location.
+            .addOnFailureListener {
+                // TODO: Define callback for API call failure.
+            }
+    }
+    fun checkLocationSettings(){
+        val builder = LocationSettingsRequest.Builder()
+        mLocationRequest = LocationRequest()
+        builder.addLocationRequest(mLocationRequest)
+        val locationSettingsRequest = builder.build()
+// Check the device location settings.
+        settingsClient.checkLocationSettings(locationSettingsRequest)
+            // Define the listener for success in calling the API for checking device location settings.
+            .addOnSuccessListener(OnSuccessListener { locationSettingsResponse ->
+                val locationSettingsStates = locationSettingsResponse.locationSettingsStates
+                val stringBuilder = StringBuilder()
+                // Check whether the location function is enabled.
+                stringBuilder.append("isLocationUsable=")
+                    .append(locationSettingsStates.isLocationUsable)
+                // Check whether HMS Core (APK) is available.
+                stringBuilder.append(",\nisHMSLocationUsable=")
+                    .append(locationSettingsStates.isHMSLocationUsable)
+                Log.i(TAG, "checkLocationSetting onComplete:$stringBuilder")
+            })
+            // Define callback for failure in checking the device location settings.
+            .addOnFailureListener(OnFailureListener { e ->
+                Log.i(TAG, "checkLocationSetting onFailure:" + e.message)
+            })
     }
     fun requestLocationPermission(){
         if (!hasLocationPermission()){
@@ -89,6 +149,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             val position = marker.position.toString()
             Log.i(TAG,"onMarkerClick:${marker.position}")
             false
+        }
+        if(hasLocationPermission()){
+            getFusedLocation()
         }
     }
 

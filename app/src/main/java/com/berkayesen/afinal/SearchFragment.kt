@@ -28,7 +28,7 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val receivedData = arguments?.getString("username")
-        binding.textView2.text = receivedData
+        //binding.textView2.text = receivedData
     }
 
     companion object {
