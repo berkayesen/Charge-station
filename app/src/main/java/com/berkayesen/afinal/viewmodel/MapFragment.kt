@@ -11,13 +11,26 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.berkayesen.afinal.MainActivity
+import com.berkayesen.afinal.R
 import com.berkayesen.afinal.databinding.FragmentMapBinding
+import com.berkayesen.afinal.retrofit2.data.api.ApiService
+import com.berkayesen.afinal.retrofit2.data.model.AddressInfo
+import com.berkayesen.afinal.retrofit2.data.model.ChargeJsonItem
+import com.berkayesen.afinal.retrofit2.data.utils.Constants
 import com.huawei.hmf.tasks.OnFailureListener
 import com.huawei.hmf.tasks.OnSuccessListener
 import com.huawei.hms.location.*
 import com.huawei.hms.maps.*
 import com.huawei.hms.maps.model.LatLng
 import com.huawei.hms.maps.model.MarkerOptions
+import com.huawei.hms.support.api.entity.location.geocoder.Address
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.awaitResponse
+import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.math.log
 
 
@@ -28,6 +41,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var settingsClient:SettingsClient
     private lateinit var mLocationRequest: LocationRequest
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private var chargeJsonItemList : ArrayList<ChargeJsonItem> ?= null
     companion object{
         private const val TAG ="MapFragment"
     }
@@ -60,9 +74,47 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MapsInitializer.setApiKey("DAEDAGAYHMojfxUfAXdc0HeLrxnYzrjhsUpm6zjonvRMJy2kbH76UPkMfK77nInn41Ybcya6NJ/USIiTiqVdzsK4j8tFNsBQQORpPw==")
+        getCurrentData()
         requestLocationPermission()
         settingsClient = LocationServices.getSettingsClient(requireActivity())
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+    }
+    private fun getCurrentData(){
+        val api = Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
+        //val api = retrofitInstance.create(ApiService::class.java)
+
+
+        lifecycleScope.launch {
+            /*val response = api.getChargeData().awaitResponse()
+            if(response.isSuccessful){
+                val data = response.body()
+                Log.d(TAG,"getCurrentData: $data")
+            }
+            else{
+                withContext(Dispatchers.Main){
+                    Toast.makeText(this@MainActivity,"Beklenmedik bir hata olustu!",Toast.LENGTH_LONG).show()
+                }
+            }*/
+
+            val result =
+                api.getChargeData(key = "c1916f96-601b-4ca9-bfdb-8b5f95eb84e5", output = "json", countryCode = "TR", maxResults = "200")
+                    .awaitResponse()
+            if(result.isSuccessful){
+                val data = result.body()
+                data?.let {
+                    chargeJsonItemList = ArrayList(it)
+                }
+                // Log.d(TAG," lat : ${chargeJsonItemList!![0].AddressInfo.Latitude}")
+                
+               // Log.d(TAG,"getChargeData:$data")
+            }
+        }
 
     }
     fun getFusedLocation(){
@@ -86,6 +138,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
             val lat = location.latitude
             val long = location.longitude
+            Log.d(TAG,"latitude :::: ${lat}")
             hMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat,long),16f))
             // TODO: Define logic for processing the Location object upon success.
             return@OnSuccessListener
@@ -136,20 +189,58 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(p0: HuaweiMap?) {
         hMap = p0
         hMap?.mapType = HuaweiMap.MAP_TYPE_TERRAIN
+
         if(hasLocationPermission()){
             hMap?.isMyLocationEnabled = true
         }
-        val options = MarkerOptions()
+
+        /* val options = MarkerOptions()
             .position(LatLng(38.630554, 27.422222))
             .title("Hello Huawei Map")
             .snippet("This is a snippet!")
         hMap?.addMarker(options)
+        */
 
-        hMap?.setOnMarkerClickListener { marker ->
-            val position = marker.position.toString()
+
+        chargeJsonItemList!!.forEach{
+            chargeJsonItem ->
+            val  options = MarkerOptions()
+            .position(LatLng(chargeJsonItem.AddressInfo.Latitude,chargeJsonItem.AddressInfo.Longitude))
+            .title(chargeJsonItem.AddressInfo.Title)
+
+            hMap?.addMarker(options)
+        }
+
+
+
+        hMap?.setOnInfoWindowClickListener { marker ->
+            val latitude = marker.position.latitude
+            Log.d(TAG,"LATİTUDE : ${latitude}")
+            val title = marker.title
+            val longitude = marker.position.longitude
+
+
+            chargeJsonItemList!!.forEach{
+                    chargeJsonItem -> if(chargeJsonItem!!.AddressInfo.Title==title.toString()
+                &&chargeJsonItem!!.AddressInfo.Latitude == latitude.toDouble()
+                &&chargeJsonItem!!.AddressInfo.Longitude==longitude.toDouble()){
+                        val bundle = Bundle()
+                        bundle.putDouble("latitude",latitude.toDouble())
+                        bundle.putDouble("longitude",longitude.toDouble())
+                        bundle.putString("title",title.toString())
+
+                        findNavController().navigate(R.id.action_mapFragment_to_detailFragment,bundle)
+             }
+            }
+
             Log.i(TAG,"onMarkerClick:${marker.position}")
             false
+
         }
+
+
+
+
         if(hasLocationPermission()){
             getFusedLocation()
         }

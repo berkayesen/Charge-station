@@ -28,15 +28,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        getCurrentData()
+        //getCurrentData()
         supportActionBar?.title = "180101030"
-        MapsInitializer.setApiKey("DAEDAGAYHMojfxUfAXdc0HeLrxnYzrjhsUpm6zjonvRMJy2kbH76UPkMfK77nInn41Ybcya6NJ/USIiTiqVdzsK4j8tFNsBQQORpPw==")
+        //MapsInitializer.setApiKey("DAEDAGAYHMojfxUfAXdc0HeLrxnYzrjhsUpm6zjonvRMJy2kbH76UPkMfK77nInn41Ybcya6NJ/USIiTiqVdzsK4j8tFNsBQQORpPw==")
 
 
     }
 
 
-    private fun getCurrentData(){
+    /* private fun getCurrentData(){
         val api = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -66,6 +66,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    }
+    }*/
 
 }
