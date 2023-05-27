@@ -139,7 +139,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             val lat = location.latitude
             val long = location.longitude
             Log.d(TAG,"latitude :::: ${lat}")
-            hMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat,long),16f))
+            hMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat,long),7f))
             // TODO: Define logic for processing the Location object upon success.
             return@OnSuccessListener
         })

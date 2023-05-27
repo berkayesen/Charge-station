@@ -75,6 +75,6 @@ class LoginFragment : Fragment() {
     }*/
 
     private fun navigateMapPage(){
-        findNavController().navigate(R.id.action_loginFragment_to_mapFragment)
+        findNavController().navigate(R.id.action_loginFragment_to_searchFragment)
     }
 }

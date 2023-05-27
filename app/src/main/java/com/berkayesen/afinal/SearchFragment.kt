@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.berkayesen.afinal.databinding.FragmentSearchBinding
 
 
@@ -23,13 +24,23 @@ class SearchFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentSearchBinding.inflate(inflater,container,false)
         return binding.root
+
+
+    }
+    fun naving(){
+        findNavController().navigate(R.id.action_searchFragment_to_mapFragment)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val receivedData = arguments?.getString("username")
         //binding.textView2.text = receivedData
+        binding.button2.setOnClickListener{
+            findNavController().navigate(R.id.action_searchFragment_to_mapFragment)
+        }
     }
+
+
 
     companion object {
 
