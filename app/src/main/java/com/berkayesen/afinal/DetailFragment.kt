@@ -30,7 +30,7 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val title = arguments?.getString("title")
+        //val title = arguments?.getString("title")
 
             val longitude = arguments?.getDouble("longitude")
 

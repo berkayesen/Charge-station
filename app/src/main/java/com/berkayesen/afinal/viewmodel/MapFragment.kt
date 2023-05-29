@@ -103,7 +103,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }*/
 
             val result =
-                api.getChargeData(key = "c1916f96-601b-4ca9-bfdb-8b5f95eb84e5", output = "json", countryCode = "TR", maxResults = "200")
+                api.getChargeData(key = "c1916f96-601b-4ca9-bfdb-8b5f95eb84e5", output = "json", countryCode = "TR", maxResults = "50")
                     .awaitResponse()
             if(result.isSuccessful){
                 val data = result.body()
@@ -218,6 +218,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             Log.d(TAG,"LATİTUDE : ${latitude}")
             val title = marker.title
             val longitude = marker.position.longitude
+            val adrs =
 
 
             chargeJsonItemList!!.forEach{
